@@ -2,8 +2,14 @@
 function custom_post_type($post_type){
     add_action('init', function() use($post_type){
         $text_domain = strtolower($post_type['singular']) . '_post_type';
-        $ucPlural = ucfirst($post_type['plural']);
-        $ucSingular = ucfirst($post_type['singular']);
+
+        if(strpos($post_type['plural'], '-') !== FALSE){
+            $ucPlural = ucwords(str_replace('-', ' ', $post_type['plural']));
+            $ucSingular = ucwords(str_replace('-', ' ', $post_type['singular']));
+        } else {
+            $ucPlural = ucfirst($post_type['plural']);
+            $ucSingular = ucfirst($post_type['singular']);
+        }
 
         register_post_type($post_type['plural'], array(
             'labels' => array(
@@ -55,6 +61,8 @@ function create_custom_post_type($plural, $singular, $dashicon, &$custom_post_ty
 }
 
 create_custom_post_type('services', 'service', 'businessman', $custom_post_types);
+create_custom_post_type('case-studies', 'case-study', 'businessman', $custom_post_types);
 create_custom_post_type('testimonials', 'testimonial', 'admin-comments', $custom_post_types);
+create_custom_post_type('partners', 'partner', 'groups', $custom_post_types);
 
 array_map( 'custom_post_type', $custom_post_types );
